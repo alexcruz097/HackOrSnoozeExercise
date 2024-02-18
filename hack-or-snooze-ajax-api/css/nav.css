@@ -15,6 +15,7 @@ nav {
 .nav-link {
   font-size: 0.85rem;
   margin: 0 3px;
+  cursor: pointer;
 }
 
 .nav-right {

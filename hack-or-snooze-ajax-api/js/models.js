@@ -7,7 +7,6 @@ const BASE_URL = "https://hack-or-snooze-v3.herokuapp.com";
  */
 
 class Story {
-
   /** Make instance of Story from data object about story:
    *   - {title, author, url, username, storyId, createdAt}
    */
@@ -28,7 +27,6 @@ class Story {
     return "hostname.com";
   }
 }
-
 
 /******************************************************************************
  * List of Story instances: used by UI to show story lists in DOM.
@@ -58,27 +56,32 @@ class StoryList {
       url: `${BASE_URL}/stories`,
       method: "GET",
     });
-
     // turn plain old story objects from API into instances of Story class
-    const stories = response.data.stories.map(story => new Story(story));
+    const stories = response.data.stories.map((story) => new Story(story));
 
     // build an instance of our own class using the new array of stories
+
     return new StoryList(stories);
   }
-
   /** Adds story data to API, makes a Story instance, adds it to story list.
    * - user - the current instance of User who will post the story
    * - obj of {title, author, url}
    *
    * Returns the new Story instance
    */
-
-  async addStory( /* user, newStory */) {
+  static async addStory(user, newStory) {
     // UNIMPLEMENTED: complete this function!
+    //  add to funtions
+
+    // post story to url
+    const res = await axios.post(`${BASE_URL}/stories`, {
+      token: user.loginToken,
+      story: newStory,
+    });
+    console.log(res)
+    return new Story(res.data.story);//{ res["story"]["storyId"], res["story"]["title"], res["story"]["author"], res["story"]["url"], res["story"]["username"], res["story"]["createdAt"] });
   }
 }
-
-
 /******************************************************************************
  * User: a user in the system (only used to represent the current user)
  */
@@ -89,21 +92,17 @@ class User {
    *   - token
    */
 
-  constructor({
-                username,
-                name,
-                createdAt,
-                favorites = [],
-                ownStories = []
-              },
-              token) {
+  constructor(
+    { username, name, createdAt, favorites = [], ownStories = [] },
+    token
+  ) {
     this.username = username;
     this.name = name;
     this.createdAt = createdAt;
 
     // instantiate Story instances for the user's favorites and ownStories
-    this.favorites = favorites.map(s => new Story(s));
-    this.ownStories = ownStories.map(s => new Story(s));
+    this.favorites = favorites.map((s) => new Story(s));
+    this.ownStories = ownStories.map((s) => new Story(s));
 
     // store the login token on the user so it's easy to find for API calls.
     this.loginToken = token;
@@ -123,15 +122,14 @@ class User {
       data: { user: { username, password, name } },
     });
 
-    let { user } = response.data
-
+    let { user } = response.data;
     return new User(
       {
         username: user.username,
         name: user.name,
         createdAt: user.createdAt,
         favorites: user.favorites,
-        ownStories: user.stories
+        ownStories: user.stories,
       },
       response.data.token
     );
@@ -151,19 +149,18 @@ class User {
     });
 
     let { user } = response.data;
-
+    console.log(user);
     return new User(
       {
         username: user.username,
         name: user.name,
         createdAt: user.createdAt,
         favorites: user.favorites,
-        ownStories: user.stories
+        ownStories: user.stories,
       },
       response.data.token
     );
   }
-
   /** When we already have credentials (token & username) for a user,
    *   we can log them in automatically. This function does that.
    */
@@ -184,7 +181,7 @@ class User {
           name: user.name,
           createdAt: user.createdAt,
           favorites: user.favorites,
-          ownStories: user.stories
+          ownStories: user.stories,
         },
         token
       );

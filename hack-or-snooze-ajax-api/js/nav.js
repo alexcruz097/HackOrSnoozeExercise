@@ -10,6 +10,8 @@ function navAllStories(evt) {
   console.debug("navAllStories", evt);
   hidePageComponents();
   putStoriesOnPage();
+  // hide stories
+  $("#story-form").hide();
 }
 
 $body.on("click", "#nav-all", navAllStories);
@@ -33,4 +35,13 @@ function updateNavOnLogin() {
   $navLogin.hide();
   $navLogOut.show();
   $navUserProfile.text(`${currentUser.username}`).show();
+}
+
+// show or hide story form when clicked
+
+function showStoryForm() {
+  $("#story-form").show();
+  // show the stories 
+  putStoriesOnPage();
+
 }

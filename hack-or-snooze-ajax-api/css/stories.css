@@ -37,3 +37,8 @@
 .story-user {
   display: block;
 }
+
+/* story form */
+.fa-star{
+  cursor: pointer;
+}
